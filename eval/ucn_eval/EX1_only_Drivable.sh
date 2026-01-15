@@ -1,0 +1,31 @@
+docker run --rm --gpus all \
+-e MPLBACKEND=Agg \
+-e PIP_OVERLAY_DIR=/data/ucn_eval_cache_ex1/pip-overlay \
+-e REQS_OVERLAY_PATH=/data/ucn_eval_cache_ex1/requirements.overlay.txt \
+-e 'PIP_INSTALL=timm yacs prefetch_generator pytesseract huggingface_hub>=0.34,<1.0 einops matplotlib lpips pytorch-msssim' \
+-v /home/shogo/coding/eval/ucn_eval/docker/entrypoint.sh:/app/entrypoint.sh:ro \
+-v /home/shogo/coding/eval/ucn_eval/eval_unicontrol_waymo.py:/app/eval_unicontrol_waymo.py:ro \
+-v /home/shogo/coding/datasets/WaymoV2:/home/shogo/coding/datasets/WaymoV2:ro \
+-v /home/shogo/coding/Metric3D:/home/shogo/coding/Metric3D:ro \
+-v /data:/data \
+-v /home/shogo/.cache/huggingface:/root/.cache/huggingface \
+-v /data/ucn_eval_cache_ex1/torch_hub:/root/.cache/torch/hub \
+ucn-eval \
+--cache-root /data/ucn_eval_cache_ex1 \
+--splits training validation testing \
+--camera front \
+--tasks drivable \
+--use-yolop \
+--drivable-methods onefroad \
+--onefroad-road-ids 0 \
+--drivable-thr 0.5 --drivable-morph-k 0 --drivable-edge-tol 1 \
+--orig-root /home/shogo/coding/datasets/WaymoV2/extracted \
+--gen-root  /home/shogo/coding/datasets/WaymoV2/UniControlNet_offline \
+--annotation-mode drivable \
+--annotate-limit 24 \
+--annotate-out /data/ucn_eval_cache_ex1/viz_ex1 \
+--tb --tb-dir /data/ucn_eval_cache_ex1/tensorboard_ex1 \
+--experiment-id EX1_only_Drivable \
+--experiment-note "EX1: Drivable(yolop+onefroad) only" \
+--no-auto-batch \
+--verbose
