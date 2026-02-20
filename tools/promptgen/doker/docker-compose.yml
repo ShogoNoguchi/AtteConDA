@@ -1,0 +1,70 @@
+# /home/shogo/coding/tools/promptgen/docker/docker-compose.yml
+version: "3.8"
+
+services:
+  promptgen:
+    build:
+      context: /home/shogo/coding/tools/promptgen/docker
+      dockerfile: Dockerfile
+      args:
+        HOST_UID: 1000     # 必要に応じてホストの UID に合わせる
+        HOST_GID: 1000
+    image: promptgen-gptoss:cu128-v3.1
+    container_name: promptgen-gptoss
+    restart: "no"
+    # GPU: 本スクリプトは不要だが、将来Torchを有効化する場合に備えて残しておく
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    environment:
+      # host.docker.internal をLinuxで使うには extra_hosts が必要
+      OLLAMA_BASE_URL: "http://host.docker.internal:11434"
+      OLLAMA_WAIT: "1"
+      TORCH_CU128: "0"          # 1にすると cu128 Torch を起動時導入
+      # 任意の追加pip:
+      # PIP_INSTALL: "yacs prefetch_generator thop pytesseract"
+      # REQS_OVERLAY_PATH: "/mnt/overlay/requirements.overlay.txt"
+      SCRIPT_ABS: "/home/shogo/coding/tools/promptgen/generate_waymo_prompts_gptoss_v3.1.py"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # スクリプト（絶対パスで読み込む前提 -> 同じパスへマウント）
+      - /home/shogo/coding/tools/promptgen/generate_waymo_prompts_gptoss_v3.1.py:/home/shogo/coding/tools/promptgen/generate_waymo_prompts_gptoss_v3.1.py:ro
+      # データ（Waymo）: 読み取り専用
+      - /home/shogo/coding/datasets/WaymoV2:/home/shogo/coding/datasets/WaymoV2:ro
+      # 出力（書き込み可能）
+      - /home/shogo/coding/datasets/WaymoV2/Prompts_gptoss_v3:/home/shogo/coding/datasets/WaymoV2/Prompts_gptoss_v3
+      # （任意）オーバーレイ要件ファイル等
+      - /mnt/hdd/ucn_eval_cache:/mnt/overlay
+    command:
+      - --semseg-root
+      - /home/shogo/coding/datasets/WaymoV2/OneFormer_cityscapes
+      - --image-root
+      - /home/shogo/coding/datasets/WaymoV2/extracted
+      - --output-root
+      - /home/shogo/coding/datasets/WaymoV2/Prompts_gptoss_v3
+      - --splits
+      - training
+      - validation
+      - testing
+      - --camera
+      - front
+      - --naming
+      - predTrainId
+      - --run-seed
+      - "20251029"
+      - --overwrite
+      - --warmup-check
+      - --verbose
+      - --top-k-labels
+      - "7"
+      - --max-words
+      - "55"
+      - --theme-mode
+      - soft
+      - --refine-pass
+      - --retry-until-success
+      - --max-attempts-per-item
+      - "-1"

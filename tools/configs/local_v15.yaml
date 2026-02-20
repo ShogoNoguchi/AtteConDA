@@ -1,0 +1,100 @@
+# /home/shogo/coding/Uni-ControlNet/configs/local_v15.yaml
+model:
+  target: models.uni_controlnet.UniControlNet
+  params:
+    linear_start: 0.00085
+    linear_end: 0.0120
+    num_timesteps_cond: 1
+    log_every_t: 200
+    timesteps: 1000
+    first_stage_key: "jpg"
+    cond_stage_key: "txt"
+    image_size: 64
+    channels: 4
+    cond_stage_trainable: false
+    conditioning_key: crossattn
+    monitor: val/loss_simple_ema
+    scale_factor: 0.18215
+    use_ema: False
+    mode: local
+
+    local_control_config:
+      target: models.local_adapter.LocalAdapter
+      params:
+        in_channels: 4
+        model_channels: 320
+        local_channels: 21           # ★ 常に21ch（7種×3ch）。未使用4種はゼロ埋めで互換維持
+        inject_channels: [192, 256, 384, 512]
+        inject_layers: [1, 4, 7, 10]
+        num_res_blocks: 2
+        attention_resolutions: [4, 2, 1]
+        channel_mult: [1, 2, 4, 4]
+        use_checkpoint: True
+        num_heads: 8
+        use_spatial_transformer: True
+        transformer_depth: 1
+        context_dim: 768
+        legacy: False
+
+    unet_config:
+      target: models.local_adapter.LocalControlUNetModel
+      params:
+        image_size: 32
+        in_channels: 4
+        model_channels: 320
+        out_channels: 4
+        num_res_blocks: 2
+        attention_resolutions: [4, 2, 1]
+        channel_mult: [1, 2, 4, 4]
+        use_checkpoint: True
+        num_heads: 8
+        use_spatial_transformer: True
+        transformer_depth: 1
+        context_dim: 768
+        legacy: False
+
+    first_stage_config:
+      target: ldm.models.autoencoder.AutoencoderKL
+      params:
+        embed_dim: 4
+        monitor: val/rec_loss
+        ddconfig:
+          double_z: true
+          z_channels: 4
+          resolution: 256
+          in_channels: 3
+          out_ch: 3
+          ch: 128
+          ch_mult: [1, 2, 4, 4]
+          num_res_blocks: 2
+          attn_resolutions: []
+          dropout: 0.0
+        lossconfig:
+          target: torch.nn.Identity
+
+    cond_stage_config:
+      target: ldm.modules.encoders.modules.FrozenCLIPEmbedder
+
+data:
+  target: src.train.dataset.UniDataset
+  params:
+    anno_path: ./data/anno.txt
+    image_dir: ./data/images
+    condition_root: ./data/conditions
+
+    # ★ Shogoさんの前提（3条件のみ用意）:
+    #   canny(エッジ), midas(深度), seg(セマンティック)
+    #   → dataset.py が残り4種[mlsd,hed,sketch,openpose]をゼロ埋めし、必ず21chで返す。
+    local_type_list: [canny, midas, seg]
+    global_type_list: []
+
+    resolution: 512
+    drop_txt_prob: 0.5
+    keep_all_cond_prob: 0.1
+    drop_all_cond_prob: 0.1
+
+    # 7要素（[canny, mlsd, hed, sketch, openpose, midas, seg] の順）で与える
+    drop_each_cond_prob: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+
+    # 明示：ゼロ埋めによる21ch固定を必ず有効化（無指定でもTrueだが、誤解を避けるため）
+    force_full21: true

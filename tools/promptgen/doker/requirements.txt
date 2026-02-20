@@ -1,0 +1,4 @@
+# /home/shogo/coding/tools/promptgen/docker/requirements.txt
+numpy==1.26.4
+tqdm>=4.66.5
+requests>=2.32.3
