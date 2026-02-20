@@ -1,0 +1,25 @@
+# DGInStyle Waymo inference config (simple YAML: key: value only)
+# NOTE: This file is parsed by a tiny parser (no PyYAML dependency).
+# Lines starting with # are ignored.
+
+# --- HuggingFace IDs (default demo uses these) ---
+controlnet_id: yurujaja/DGInStyle
+controlnet_subfolder: ControlNet_UNet-S
+sd_base_id: runwayml/stable-diffusion-v1-5
+
+# Optional: HF revision (empty means default)
+hf_revision:
+
+# --- runtime ---
+# fp16 or fp32
+torch_dtype: fp16
+
+# accelerate が入っている場合のみ有効（無ければ自動的にOFFへフォールバック）
+use_cpu_offload: false
+
+# xformers が入っている場合のみ有効（無ければ自動的にOFFへフォールバック）
+enable_xformers: false
+
+# DGInStyle pipeline_refine 用（demo の初回生成に合わせる）
+rescale_factor: 1
+multi_diff_stride: 64
