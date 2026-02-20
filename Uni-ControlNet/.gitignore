@@ -1,0 +1,67 @@
+# ==========================================
+# Git Ignore Rules (COMPLETE, CLEAN VERSION)
+# ==========================================
+
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.pt
+*.pth
+
+# ---- Jupyter ----
+.ipynb_checkpoints/
+
+# ---- logs ----
+logs/
+logs/*
+logs/**
+
+# specific training logs
+logs/finetune_uni_syndiff/
+logs/finetune_uni_syndiff/*
+logs/finetune_uni_syndiff/**
+
+# ---- generated figures ----
+figs/
+figs/*
+figs/**
+
+# ---- clpt (directory or file) ----
+clpt
+clpt/
+clpt/*
+clpt/**
+
+# ---- ML artifacts ----
+*.log
+*.csv
+*.npy
+*.npz
+*.ckpt
+*.swp
+*.zip
+*.tar
+*.tar.gz
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+
+# ---- environments ----
+.env/
+.venv/
+venv/
+ENV/
+env/
+
+# ---- vscode ----
+.vscode/
+
+# ---- idea ----
+.idea/
+
+# ---- cache ----
+.cache/

@@ -1,0 +1,115 @@
+# /data/coding/Uni-ControlNet/configs/local_v15_syndiff_pam2.yaml
+
+model:
+  target: models.uni_controlnet.UniControlNet
+  params:
+    linear_start: 0.00085
+    linear_end: 0.0120
+    num_timesteps_cond: 1
+    log_every_t: 200
+    timesteps: 1000
+    first_stage_key: "jpg"
+    cond_stage_key: "txt"
+    image_size: 64
+    channels: 4
+    cond_stage_trainable: false
+    conditioning_key: crossattn
+    monitor: val/loss_simple_ema
+    scale_factor: 0.18215
+    use_ema: False
+    mode: uni
+
+    # ===== 必須（★これが抜けていた）=====
+    first_stage_config:
+      target: ldm.models.autoencoder.AutoencoderKL
+      params:
+        embed_dim: 4
+        monitor: val/rec_loss
+        ddconfig:
+          double_z: true
+          z_channels: 4
+          resolution: 256
+          in_channels: 3
+          out_ch: 3
+          ch: 128
+          ch_mult: [1, 2, 4, 4]
+          num_res_blocks: 2
+          attn_resolutions: []
+          dropout: 0.0
+        lossconfig:
+          target: torch.nn.Identity
+
+    cond_stage_config:
+      target: ldm.modules.encoders.modules.FrozenCLIPEmbedder
+
+    # ===== Local / Global =====
+    local_control_config:
+      target: models.local_adapter.LocalAdapter
+      params:
+        in_channels: 4
+        model_channels: 320
+        local_channels: 21
+        inject_channels: [192, 256, 384, 512]
+        inject_layers: [1, 4, 7, 10]
+        num_res_blocks: 2
+        attention_resolutions: [4, 2, 1]
+        channel_mult: [1, 2, 4, 4]
+        use_checkpoint: True
+        num_heads: 8
+        use_spatial_transformer: True
+        transformer_depth: 1
+        context_dim: 768
+        legacy: False
+
+        # ===== PAM ON =====
+        use_patch_adaptation: true
+        pam_cfg:
+          edge_slice: [0, 3]
+          depth_slice: [15, 18]
+          seg_slice: [18, 21]
+          model_channels: 320
+          context_dim: 768
+          num_heads: 8
+          attn_dropout: 0.0
+          temperature: 1.0
+          log_every: 500
+          enhancer_enable: true
+          enhancer_n_blocks: 2
+          enhancer_groups: 32
+
+    global_control_config:
+      target: models.global_adapter.GlobalAdapter
+      params:
+        in_dim: 768
+        channel_mult: [2, 4]
+
+    unet_config:
+      target: models.local_adapter.LocalControlUNetModel
+      params:
+        image_size: 32
+        in_channels: 4
+        model_channels: 320
+        out_channels: 4
+        num_res_blocks: 2
+        attention_resolutions: [4, 2, 1]
+        channel_mult: [1, 2, 4, 4]
+        use_checkpoint: True
+        num_heads: 8
+        use_spatial_transformer: True
+        transformer_depth: 1
+        context_dim: 768
+        legacy: False
+
+
+# ----------- Data (train) -----------
+
+data_train:
+  target: src.train.dataset_multi.MultiCondDataset
+  params:
+    anno_path: ./data/anno_syndiff_train.csv
+    resolution: 512
+    drop_txt_prob: 0.1
+    keep_all_cond_prob: 1.0
+    drop_all_cond_prob: 0.0
+    drop_each_cond_prob: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    global_dim: 768
