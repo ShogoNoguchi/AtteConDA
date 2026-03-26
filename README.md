@@ -1,5 +1,16 @@
-# A Unified Framework for Geometry-Consistent Synthetic Data Augmentation
+#　AtteConDA : Attention-Based Conflict Suppression in Multi-Condition Diffusion Models and Synthetic Data Augmentation
 
+## Environment Setup
+
+This project provides reproducible environment files under `environment/`.
+
+### Quick Start
+
+```bash
+git clone REPLACE_WITH_YOUR_REPOSITORY_URL
+cd B_thesis_Repo
+conda env create -f environment/environment.yaml
+conda activate atteconda_env
 ![Overview](figs/first.png)
 
 This repository contains the official implementation and evaluation pipeline for my **Bachelor’s Thesis**,  
