@@ -1,47 +1,154 @@
-# Environment Specification
+# Environment notes for AtteConDA
 
-This directory contains the full reproducible environment specification.
+This directory is the environment entry point for the public release.
 
-## Files
+---
 
-- `environment.yaml`
-  - Primary environment specification.
-  - Recommended installation method.
+## Design policy
 
-- `linux-64-conda-explicit.txt`
-  - Linux-only explicit lock file for conda packages.
+The main AtteConDA training machine is an **RTX 5090** and the repository is intentionally aligned with **CUDA 12.8 / cu128**.
+For that reason, the repository should **not** silently drift to a different CUDA build.
 
-- `pip-requirements.txt`
-  - pip-only portable requirements.
+At the same time, the public release should be honest about what is already validated and what is still a future cleanup target.
 
-- `pip-freeze.txt`
-  - Full audit record of pip packages.
+So the policy is:
 
-## Installation Modes
+1. **Keep the author-validated environment file reproducible.**
+2. **Document it clearly.**
+3. **Do not silently replace working cu128 settings with a different stack just for cosmetic reasons.**
 
-### 1. Standard (recommended)
+---
+
+## What is currently in `environment.yaml`
+
+The current file is the author-validated environment and is intentionally preserved because it was already used on the RTX 5090 machine.
+
+In particular, the current file includes:
+
+- Python 3.11
+- CUDA 12.8 user-space packages
+- cu128 PyTorch / torchvision / torchaudio
+- diffusers 0.36.0
+- pytorch-lightning 1.9.5
+
+This is the right choice for **exact reproducibility** of the current lab machine.
+
+---
+
+## Quick start
 
 ```bash
-conda env create -f environment.yaml
+git clone https://github.com/ShogoNoguchi/AtteConDA.git
+cd AtteConDA
+conda env create -f environment/environment.yaml
 conda activate atteconda_env
+bash scripts/verify_env.sh atteconda_env
 ```
 
-### 2. Strict Linux reproduction
+---
+
+## Verified machine profile used for this release
+
+This repository was organized around the following validated environment profile:
+
+- OS: Ubuntu 24.04.3 LTS
+- GPU: NVIDIA GeForce RTX 5090
+- CUDA build target: 12.8 / cu128
+- PyTorch stack: cu128
+- diffusers: 0.36.0
+
+The exact pinned versions remain in `environment.yaml`.
+
+---
+
+## Why this README does **not** silently replace the file with a different stack
+
+For RTX 5090 / Blackwell-class hardware, the most important requirement is that the installed PyTorch build actually matches **cu128** and works reliably on the target machine.
+
+The existing repository already satisfies that.
+So for the public release, the safest action is:
+
+- keep the validated file,
+- add verification tooling,
+- explain the reasoning clearly,
+- and only introduce a new stable variant after a full train / infer / eval validation pass.
+
+That is more honest than claiming a new environment file has been validated when it has not.
+
+---
+
+## Optional future cleanup: a stable-only PyTorch trio
+
+If you later decide to publish a second environment variant that uses only officially stable PyTorch wheels, do it as a **separate** file after validation instead of overwriting the current working file.
+
+A good pattern is:
 
 ```bash
-conda create -n atteconda_env --file linux-64-conda-explicit.txt
-conda activate atteconda_env
-pip install -r pip-requirements.txt
+pip install torch==2.9.0 torchvision==0.24.0 torchaudio==2.9.0 --index-url https://download.pytorch.org/whl/cu128
 ```
 
-## Important Constraints
+Important:
 
-- Do NOT use local editable installs (`-e /home/...`)
-- All dependencies must be portable
-- This environment was validated on:
+- validate **training**
+- validate **Waymo inference**
+- validate **evaluation Docker overlay**
+- validate **xformers compatibility**
+- validate **pytorch-lightning compatibility**
 
-  - Ubuntu 24.04.3
-  - RTX 5090
-  - CUDA 12.8
-  - PyTorch 2.10.0.dev+cu128
-  - diffusers 0.36.0
+before making that stable-only variant the default.
+
+---
+
+## Repository-side verification
+
+Use the repository verification script after every fresh installation:
+
+```bash
+bash scripts/verify_env.sh atteconda_env
+```
+
+The script checks:
+
+- Python version
+- torch / torchvision / torchaudio versions
+- CUDA availability
+- GPU name
+- `torch.version.cuda`
+- diffusers
+- pytorch-lightning
+- transformers
+- open_clip
+- onnxruntime
+- xformers availability
+
+It exits with a non-zero status if CUDA is unavailable.
+
+---
+
+## What to avoid
+
+### 1. Do not install random packages into the system Python
+
+Always use the conda environment or the Docker overlay flow.
+
+### 2. Do not accidentally downgrade the cu128 build
+
+A casual `pip install torch ...` without the proper cu128 index can break the RTX 5090 setup.
+
+### 3. Do not rebuild the Docker image unnecessarily
+
+The project policy is to prefer:
+
+- the common NVIDIA CUDA 12.8 runtime base image
+- pip overlay caches under `/data`
+- and reproducible runtime commands
+
+instead of repeatedly rebuilding the image for small package changes.
+
+---
+
+## Related files
+
+- `../scripts/verify_env.sh`
+- `../README.md`
+- `../docs/RESEARCHER_README.md`

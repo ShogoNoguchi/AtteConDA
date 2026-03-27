@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "Please cite AtteConDA using the metadata below."
+title: "AtteConDA: Attention-Based Conflict Suppression in Multi-Condition Diffusion Models and Synthetic Data Augmentation"
+type: software
+authors:
+  - family-names: "Noguchi"
+    given-names: "Shogo"
+    affiliation: "Gunma University"
+  - family-names: "Yuminaka"
+    given-names: "Yasushi"
+    affiliation: "Gunma University"
+repository-code: "https://github.com/ShogoNoguchi/AtteConDA"
+url: "https://github.com/ShogoNoguchi/AtteConDA"
+license: "Apache-2.0"
+version: "0.1.0"
+date-released: "2026-03-26"
+keywords:
+  - diffusion models
+  - controllable generation
+  - autonomous driving
+  - synthetic data augmentation
+  - condition conflict suppression
+  - patch-wise adaptation module
+abstract: >-
+  AtteConDA is a multi-condition diffusion framework for structure-preserving
+  autonomous-driving synthetic data augmentation. It combines semantic
+  segmentation, depth, and edge conditions with a Patch-wise Adaptation Module
+  (PAM) to reduce inter-condition conflicts while preserving scene structure.

@@ -1,6 +1,99 @@
-# Python cache
+# ============================================================
+# Python
+# ============================================================
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
 
-# Checkpoints
+# ============================================================
+# Virtual environments / local package managers
+# ============================================================
+.venv/
+venv/
+ENV/
+env/
+.python-version
+
+# ============================================================
+# Jupyter
+# ============================================================
+.ipynb_checkpoints/
+
+# ============================================================
+# Test / lint / type checker caches
+# ============================================================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.hypothesis/
+.tox/
+.nox/
+coverage.xml
+htmlcov/
+.coverage
+.coverage.*
+
+# ============================================================
+# Editor / OS noise
+# ============================================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ============================================================
+# Logs and experiment outputs
+# ============================================================
+*.log
+logs/
+lightning_logs/
+runs/
+wandb/
+tensorboard/
+tb/
+tmp/
+temp/
+
+# ============================================================
+# Model checkpoints and large generated weights
+# ============================================================
 *.ckpt
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+
+# ============================================================
+# Generated images / evaluation outputs / caches
+# ============================================================
+_site/
+docs/_site/
+cache/
+.cache/
+output/
+outputs/
+results/
+artifacts/
+
+# ============================================================
+# Repository-specific generated files
+# ============================================================
+Uni-ControlNet/data/anno_syndiff_train.csv
+Uni-ControlNet/data/anno_syndiff_waymo_val.csv
+
+# local generated prompt / condition outputs live outside the repo
+# on the author machine (e.g. /data/...), so they are intentionally
+# not tracked here.
+
+# ============================================================
+# Shell history / local scratch
+# ============================================================
+*.swp
+*.swo
+*~
