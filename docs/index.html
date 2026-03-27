@@ -21,10 +21,13 @@
       --max: 1180px;
       --shadow: 0 12px 38px rgba(0, 0, 0, 0.28);
       --radius: 18px;
+      --figure-bg: #ffffff;
+      --figure-text: #0f172a;
     }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -36,8 +39,14 @@
       line-height: 1.6;
     }
 
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
 
     .wrap {
       width: min(var(--max), calc(100% - 32px));
@@ -158,17 +167,20 @@
       letter-spacing: -0.02em;
     }
 
-    .lead-card {
-      padding: 20px 22px;
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(23, 32, 54, 0.90), rgba(17, 24, 39, 0.94));
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      color: var(--muted);
+    .impact-statement {
+      margin: 10px 0 0;
+      max-width: 1040px;
+      font-size: clamp(1.45rem, 2.3vw, 2.2rem);
+      line-height: 1.38;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #f8fbff;
+      text-wrap: balance;
     }
 
     .section {
       padding: 28px 0;
+      scroll-margin-top: 92px;
     }
 
     .section-header {
@@ -181,7 +193,9 @@
       max-width: 920px;
     }
 
-    .grid-2, .grid-3, .stats {
+    .grid-2,
+    .grid-3,
+    .stats {
       display: grid;
       gap: 18px;
     }
@@ -190,7 +204,8 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .grid-3, .stats {
+    .grid-3,
+    .stats {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
@@ -202,7 +217,9 @@
       box-shadow: var(--shadow);
     }
 
-    .card h3 { margin-top: 0; }
+    .card h3 {
+      margin-top: 0;
+    }
 
     .stat {
       padding: 18px;
@@ -224,13 +241,37 @@
       margin: 0;
     }
 
+    .figure-stage {
+      display: block;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--figure-bg);
+      box-shadow: var(--shadow);
+    }
+
     figure img {
       width: 100%;
       display: block;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: #0a0f1b;
-      box-shadow: var(--shadow);
+      border-radius: 12px;
+      border: 0;
+      background: var(--figure-bg);
+      box-shadow: none;
+    }
+
+    .zoomable {
+      cursor: zoom-in;
+      transition: transform 0.18s ease, filter 0.18s ease;
+    }
+
+    .zoomable:hover {
+      transform: scale(1.01);
+      filter: brightness(1.02);
+    }
+
+    .zoomable:focus {
+      outline: 2px solid rgba(125, 211, 252, 0.95);
+      outline-offset: 4px;
     }
 
     figcaption {
@@ -254,7 +295,8 @@
       background: transparent;
     }
 
-    th, td {
+    th,
+    td {
       padding: 14px 14px;
       text-align: left;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -307,19 +349,77 @@
       font-size: 0.95rem;
     }
 
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      padding: 24px;
+      background: rgba(0, 0, 0, 0.84);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      cursor: zoom-out;
+    }
+
+    .lightbox-panel {
+      max-width: min(96vw, 1680px);
+      max-height: 96vh;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--figure-bg);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.70);
+      cursor: auto;
+      overflow: auto;
+    }
+
+    .lightbox-panel img {
+      max-width: min(92vw, 1600px);
+      max-height: calc(96vh - 120px);
+      width: auto;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      background: var(--figure-bg);
+    }
+
+    .lightbox-caption {
+      color: var(--figure-text);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
     .footer {
       padding: 48px 0 64px;
       color: var(--muted);
     }
 
     @media (max-width: 900px) {
-      .grid-2, .grid-3, .stats {
+      .grid-2,
+      .grid-3,
+      .stats {
         grid-template-columns: 1fr;
       }
 
       .nav-inner {
         align-items: flex-start;
         flex-direction: column;
+      }
+
+      .lightbox-overlay {
+        padding: 12px;
+      }
+
+      .lightbox-panel {
+        padding: 12px;
+        border-radius: 16px;
+      }
+
+      .figure-stage {
+        padding: 10px;
       }
     }
   </style>
@@ -356,8 +456,7 @@
         <a class="btn secondary" href="https://github.com/ShogoNoguchi/AtteConDA/blob/main/docs/RESEARCHER_README.md" target="_blank" rel="noopener">Researcher README</a>
       </div>
 
-      <div class="lead-card">
-        <strong>Impact sentence.</strong><br>
+      <div class="impact-statement">
         Instead of treating multi-condition control as simple early fusion, AtteConDA explicitly handles
         inter-condition conflict so that semantic layout, depth geometry, and edge structure can support
         each other rather than destroy each other.
@@ -385,7 +484,9 @@
       </div>
 
       <figure>
-        <img src="../figs/従来水増しとの比較.png" alt="Comparison between conventional augmentation and generative augmentation">
+        <div class="figure-stage">
+          <img class="zoomable" src="../figs/従来水増しとの比較.png" alt="Comparison between conventional augmentation and generative augmentation">
+        </div>
         <figcaption>
           Conceptual comparison: conventional image augmentation versus structure-preserving generative augmentation.
         </figcaption>
@@ -445,22 +546,30 @@
 
       <div class="grid-2" style="margin-top: 18px;">
         <figure>
-          <img src="../figs/pipeline_multicondition.png" alt="Pipeline overview">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/pipeline_multicondition.png" alt="Pipeline overview">
+          </div>
           <figcaption>Overall multi-condition generation pipeline.</figcaption>
         </figure>
         <figure>
-          <img src="../figs/model_detail.png" alt="Model detail">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/model_detail.png" alt="Model detail">
+          </div>
           <figcaption>Model detail based on a Uni-ControlNet-compatible controllable diffusion backbone.</figcaption>
         </figure>
       </div>
 
       <div class="grid-2" style="margin-top: 18px;">
         <figure>
-          <img src="../figs/pam_architecture.png" alt="PAM architecture">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/pam_architecture.png" alt="PAM architecture">
+          </div>
           <figcaption>PAM explicitly targets local inter-condition conflict suppression.</figcaption>
         </figure>
         <figure>
-          <img src="../figs/text_pip.png" alt="Prompt generation pipeline">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/text_pip.png" alt="Prompt generation pipeline">
+          </div>
           <figcaption>Prompt generation pipeline with CLIP/open_clip classification and Qwen3-VL captioning.</figcaption>
         </figure>
       </div>
@@ -498,22 +607,30 @@
 
       <div class="grid-2">
         <figure>
-          <img src="../figs/qualitative_tune.png" alt="Qualitative tuning comparison">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/qualitative_tune.png" alt="Qualitative tuning comparison">
+          </div>
           <figcaption>Qualitative comparison across training progress and prior-work baselines.</figcaption>
         </figure>
         <figure>
-          <img src="../figs/qualitative_pam.png" alt="Qualitative PAM comparison">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/qualitative_pam.png" alt="Qualitative PAM comparison">
+          </div>
           <figcaption>Qualitative comparison showing the effect of PAM on distant structure preservation.</figcaption>
         </figure>
       </div>
 
       <div class="grid-2" style="margin-top: 18px;">
         <figure>
-          <img src="../figs/impact_pretrain.png" alt="Pretraining impact">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/impact_pretrain.png" alt="Pretraining impact">
+          </div>
           <figcaption>Pretraining improves structure preservation relative to the from-scratch setting.</figcaption>
         </figure>
         <figure>
-          <img src="../figs/qualitative_pam_拡大PAMによる改善示し図.png" alt="Zoomed PAM improvement">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/qualitative_pam_拡大PAMによる改善示し図.png" alt="Zoomed PAM improvement">
+          </div>
           <figcaption>Zoomed example: PAM improves distant road continuity and local structural consistency.</figcaption>
         </figure>
       </div>
@@ -597,11 +714,15 @@
 
       <div class="grid-2" style="margin-top: 18px;">
         <figure>
-          <img src="../figs/スケーリング1.png" alt="Scaling structure metrics">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/スケーリング1.png" alt="Scaling structure metrics">
+          </div>
           <figcaption>Scaling behavior for structure-related metrics.</figcaption>
         </figure>
         <figure>
-          <img src="../figs/スケーリング2.png" alt="Scaling quality metrics">
+          <div class="figure-stage">
+            <img class="zoomable" src="../figs/スケーリング2.png" alt="Scaling quality metrics">
+          </div>
           <figcaption>Scaling behavior for quality, realism, diversity, and text-alignment metrics.</figcaption>
         </figure>
       </div>
@@ -720,5 +841,97 @@
       AtteConDA project page source is maintained directly inside the repository for reproducibility and long-term maintainability.
     </div>
   </footer>
+
+  <script>
+    (function () {
+      const zoomableImages = document.querySelectorAll("figure img.zoomable");
+      let overlay = null;
+      let lastFocusedElement = null;
+
+      function closeLightbox() {
+        if (overlay) {
+          overlay.remove();
+          overlay = null;
+          document.body.style.overflow = "";
+          document.removeEventListener("keydown", handleOverlayKeydown);
+
+          if (lastFocusedElement) {
+            lastFocusedElement.focus();
+            lastFocusedElement = null;
+          }
+        }
+      }
+
+      function handleOverlayKeydown(event) {
+        if (event.key === "Escape") {
+          closeLightbox();
+        }
+      }
+
+      function openLightbox(img) {
+        closeLightbox();
+
+        lastFocusedElement = document.activeElement;
+
+        const figure = img.closest("figure");
+        const captionText = figure && figure.querySelector("figcaption")
+          ? figure.querySelector("figcaption").textContent.trim()
+          : "";
+
+        overlay = document.createElement("div");
+        overlay.className = "lightbox-overlay";
+        overlay.setAttribute("role", "dialog");
+        overlay.setAttribute("aria-modal", "true");
+        overlay.setAttribute("aria-label", img.alt || "Expanded figure");
+
+        const panel = document.createElement("div");
+        panel.className = "lightbox-panel";
+
+        const overlayImage = document.createElement("img");
+        overlayImage.src = img.src;
+        overlayImage.alt = img.alt || "Expanded figure";
+
+        panel.appendChild(overlayImage);
+
+        if (captionText) {
+          const caption = document.createElement("div");
+          caption.className = "lightbox-caption";
+          caption.textContent = captionText;
+          panel.appendChild(caption);
+        }
+
+        overlay.appendChild(panel);
+
+        overlay.addEventListener("click", function () {
+          closeLightbox();
+        });
+
+        panel.addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+
+        document.body.appendChild(overlay);
+        document.body.style.overflow = "hidden";
+        document.addEventListener("keydown", handleOverlayKeydown);
+      }
+
+      zoomableImages.forEach(function (img) {
+        img.setAttribute("tabindex", "0");
+        img.setAttribute("role", "button");
+        img.setAttribute("aria-label", (img.alt || "Figure") + " (click to expand)");
+
+        img.addEventListener("click", function () {
+          openLightbox(img);
+        });
+
+        img.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openLightbox(img);
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
