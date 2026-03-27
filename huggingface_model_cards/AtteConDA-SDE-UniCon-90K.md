@@ -146,7 +146,7 @@ Full practical attribution guidance for this repository is documented in:
 ```bibtex
 @misc{noguchi2026atteconda,
   title        = {AtteConDA: Attention-Based Conflict Suppression in Multi-Condition Diffusion Models and Synthetic Data Augmentation},
-  author       = {Shogo Noguchi and Yasushi Yuminaka},
+  author       = {Shogo Noguchi},
   year         = {2026},
   howpublished = {GitHub repository},
   note         = {Gunma University}

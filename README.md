@@ -525,6 +525,12 @@ AtteConDA stands on top of several important upstream projects.
   important prior work and baseline for autonomous-driving diffusion-based augmentation  
   repository: `https://github.com/prs-eth/DGInStyle`
 
+## Academic context
+
+This repository was implemented and organized by Shogo Noguchi.
+
+This work was conducted as bachelor’s thesis research in Yuminaka Lab, Gunma University, under the academic supervision of Prof. Yasushi Yuminaka.
+
 ### Paper-level inspiration
 
 - **PixelPonder**  
@@ -572,7 +578,7 @@ BibTeX-style software citation:
 ```bibtex
 @misc{noguchi2026atteconda,
   title        = {AtteConDA: Attention-Based Conflict Suppression in Multi-Condition Diffusion Models and Synthetic Data Augmentation},
-  author       = {Shogo Noguchi and Yasushi Yuminaka},
+  author       = {Shogo Noguchi},
   year         = {2026},
   howpublished = {GitHub repository},
   note         = {Gunma University}
