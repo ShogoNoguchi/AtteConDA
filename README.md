@@ -66,25 +66,25 @@ The Pages source is provided in [`docs/index.html`](./docs/index.html), and the 
 ### 1) Why generative augmentation instead of only geometric augmentation?
 
 <p align="center">
-  <img src="./figs/従来水増しとの比較.png" alt="Why generative augmentation matters" width="92%">
+  <img src="./figs/fig_aug_compare.png" alt="Why generative augmentation matters" width="92%">
 </p>
 
 ### 2) Full pipeline
 
 <p align="center">
-  <img src="./figs/pipeline_multicondition.png" alt="Pipeline overview" width="92%">
+  <img src="./figs/fig_pipeline_multicondition.png" alt="Pipeline overview" width="92%">
 </p>
 
 ### 3) Model structure
 
 <p align="center">
-  <img src="./figs/model_detail.png" alt="Model detail" width="92%">
+  <img src="./figs/fig_model_detail.png" alt="Model detail" width="92%">
 </p>
 
 ### 4) PAM: Patch-wise Adaptation Module
 
 <p align="center">
-  <img src="./figs/pam_architecture.png" alt="PAM architecture" width="92%">
+  <img src="./figs/fig_pam_architecture.png" alt="PAM architecture" width="92%">
 </p>
 
 ---
@@ -94,11 +94,11 @@ The Pages source is provided in [`docs/index.html`](./docs/index.html), and the 
 ### Qualitative examples
 
 <p align="center">
-  <img src="./figs/qualitative_tune.png" alt="Qualitative comparison across training steps" width="92%">
+  <img src="./figs/fig_qualitative_tune.png" alt="Qualitative comparison across training steps" width="92%">
 </p>
 
 <p align="center">
-  <img src="./figs/qualitative_pam.png" alt="Qualitative PAM comparison" width="92%">
+  <img src="./figs/fig_qualitative_pam.png" alt="Qualitative PAM comparison" width="92%">
 </p>
 
 ### Quantitative comparison against prior work
