@@ -29,7 +29,7 @@ This repository is designed to be useful in **two directions at the same time**:
 - ✅ Release the training code
 - ✅ Release the inference code
 - ✅ Release the model
-- □ Release the arXiv paper
+- ✅ Release the arXiv paper
 
 ---
 
@@ -54,6 +54,7 @@ AtteConDA is built around three ideas:
 
 - **GitHub repository:** `https://github.com/ShogoNoguchi/AtteConDA`
 - **Project page:** `https://shogonoguchi.github.io/AtteConDA/`
+- **arXiv paper:** `https://arxiv.org/abs/2605.09425`
 - **Hugging Face collection:** `https://huggingface.co/collections/Shogo-Noguchi/atteconda`
 
 The Pages source is provided in [`docs/index.html`](./docs/index.html), and the deployment workflow is provided in [`.github/workflows/pages.yml`](./.github/workflows/pages.yml).
@@ -571,16 +572,14 @@ before redistributing code or checkpoints.
 
 ## Citation
 
-A software citation file is provided as [`CITATION.cff`](./CITATION.cff).
-
-BibTeX-style software citation:
+If you use AtteConDA, please cite the arXiv paper:
 
 ```bibtex
-@misc{noguchi2026atteconda,
-  title        = {AtteConDA: Attention-Based Conflict Suppression in Multi-Condition Diffusion Models and Synthetic Data Augmentation},
-  author       = {Shogo Noguchi},
-  year         = {2026},
-  howpublished = {GitHub repository},
-  note         = {Gunma University}
+@article{noguchi2026atteconda,
+  title   = {AtteConDA: Attention-Based Conflict Suppression in Multi-Condition Diffusion Models and Synthetic Data Augmentation},
+  author  = {Noguchi, Shogo},
+  journal = {arXiv preprint arXiv:2605.09425},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2605.09425}
 }
 ```
